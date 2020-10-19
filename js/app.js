@@ -7,10 +7,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const addSectionToMain = (id, header, paragraphs) => {
     const section = document.createElement("section");
     section.setAttribute("id", `section${id}`);
+    // default active class
+    if (id === 0) {
+      section.classList.add("section__active");
+    }
+
     const landingContainer = document.createElement("div");
     landingContainer.classList.add("landing__container");
+
     const h1 = document.createElement("h2");
     h1.textContent = header;
+
     landingContainer.appendChild(h1);
     paragraphs.forEach((pText) => {
       const p = document.createElement("p");
@@ -30,17 +37,28 @@ document.addEventListener("DOMContentLoaded", () => {
     main.append(header);
   };
   const setNavbarMenu = () => {
-    sectionsNames = document.querySelectorAll(
+    sectionsHeaders = document.querySelectorAll(
       "section > .landing__container > h2"
     );
-    console.log(sectionsNames);
-    sectionsNames.forEach((sectionName) => {
+    sectionsHeaders.forEach((sectionHeader, index) => {
+      const sectionName = sectionHeader.textContent;
       const li = document.createElement("li");
       const menuLink = document.createElement("a");
+      const sectionLink = `#section${index}`;
+
       menuLink.classList.add("menu__link");
-      menuLink.textContent = sectionName.textContent;
+      menuLink.textContent = sectionName;
+      menuLink.setAttribute("href", sectionLink);
+
       li.appendChild(menuLink);
       navbarList.appendChild(li);
+
+      menuLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        document
+          .querySelector(sectionLink)
+          .scrollIntoView({ block: "start", behavior: "smooth" });
+      });
     });
   };
 
@@ -80,6 +98,14 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   setPage();
 
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", function (e) {
+      e.preventDefault();
+      document
+        .querySelector(this.getAttribute("href"))
+        .scrollIntoView({ block: "start", behavior: "smooth" });
+    });
+  });
   scrollToTopBtn.addEventListener("click", scrollToTop);
   document.addEventListener("scroll", handleScroll);
 });
