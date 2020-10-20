@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // declear global variables
   const rootElement = document.documentElement;
   const main = document.querySelector("main");
   const navbarMenu = document.querySelector(".navbar__menu");
   const navbarList = document.querySelector("#navbar__list");
   const scrollToTopBtn = document.querySelector("#scrollToTopBtn");
-  let sections; // to save sections node list after creation
-  let menuLinks; // to save menulinks node list after creation
+  let sections; // to save sections nodelist after creation
+  let menuLinks; // to save menulinks nodelist after creation
   let hideScoralbarTimeout;
 
   // start hellper functions
@@ -85,6 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     sectionsHeaders = document.querySelectorAll(
       "section > .landing__container > h2"
     );
+    const navbarMenuFragment = document.createDocumentFragment();
     sectionsHeaders.forEach((sectionHeader, index) => {
       const sectionName = sectionHeader.textContent;
       const li = document.createElement("li");
@@ -96,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
       menuLink.setAttribute("href", sectionLink);
 
       li.appendChild(menuLink);
-      navbarList.appendChild(li);
+      navbarMenuFragment.appendChild(li);
 
       // Scroll to section on link click
       menuLink.addEventListener("click", (e) => {
@@ -105,7 +107,9 @@ document.addEventListener("DOMContentLoaded", () => {
           .querySelector(sectionLink)
           .scrollIntoView({ block: "start", behavior: "smooth" });
       });
+      navbarList.appendChild(navbarMenuFragment);
     });
+
     menuLinks = document.querySelectorAll(".menu__link");
   };
   // fun to set all page components
