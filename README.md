@@ -1,6 +1,5 @@
 # Landing Page Project
 
-it is landing Page Project  
 this project built for udactiy Web Development Professional Nanodegree Program
 
 ### features
