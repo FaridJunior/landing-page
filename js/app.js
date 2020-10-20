@@ -1,9 +1,50 @@
 document.addEventListener("DOMContentLoaded", () => {
   const rootElement = document.documentElement;
   const main = document.querySelector("main");
+  const navbarMenu = document.querySelector(".navbar__menu");
   const navbarList = document.querySelector("#navbar__list");
   const scrollToTopBtn = document.querySelector("#scrollToTopBtn");
+  let sections; // to save sections node list after creation
+  let menuLinks; // to save menulinks node list after creation
+  let hideScoralbarTimeout;
 
+  // start hellper functions
+  const scrollToTop = () => {
+    rootElement.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  function isInViewport(element) {
+    const rect = element.getBoundingClientRect();
+    return (
+      rect.top >= -window.innerHeight * 0.1 && // .2  to still active the section after scorlinng  it by .4 of window height
+      rect.bottom <=
+        (window.innerHeight || document.documentElement.clientHeight) * 1.5 // 1.5 to set to active if only half of the section is apperared
+    );
+  }
+
+  const handleScroll = () => {
+    navbarMenu.style.display = "block";
+    const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
+    scrollToTopBtn.style.opacity = rootElement.scrollTop / scrollTotal;
+    if (rootElement.scrollTop / scrollTotal > 0.15) {
+      scrollToTopBtn.style.display = "block";
+    } else {
+      scrollToTopBtn.style.display = "none";
+    }
+    setTimeout(setActiveSection, 0);
+
+    //hide nav bar when not scorling
+    clearTimeout(hideScoralbarTimeout);
+    hideScoralbarTimeout = setTimeout(() => {
+      navbarMenu.style.display = "none";
+    }, 5000);
+  };
+  // end helper functions
+
+  // start main functions
   const addSectionToMain = (id, header, paragraphs) => {
     const section = document.createElement("section");
     section.setAttribute("id", `section${id}`);
@@ -26,6 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     section.append(landingContainer);
     main.appendChild(section);
+    // update sections array
+    sections = document.querySelectorAll("section");
   };
 
   const setMainHeader = (headerText) => {
@@ -36,6 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
     header.appendChild(h1);
     main.append(header);
   };
+  // build the nav
   const setNavbarMenu = () => {
     sectionsHeaders = document.querySelectorAll(
       "section > .landing__container > h2"
@@ -53,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
       li.appendChild(menuLink);
       navbarList.appendChild(li);
 
+      // Scroll to section on link click
       menuLink.addEventListener("click", (e) => {
         e.preventDefault();
         document
@@ -60,12 +105,12 @@ document.addEventListener("DOMContentLoaded", () => {
           .scrollIntoView({ block: "start", behavior: "smooth" });
       });
     });
+    menuLinks = document.querySelectorAll(".menu__link");
   };
-
+  // fun to set all page components
   const setPage = () => {
     setMainHeader("Landing Page");
     sectionsData.forEach((section, index) => {
-      console.log(index);
       setTimeout(
         () =>
           addSectionToMain((id = index), section.header, section.paragraphs),
@@ -75,37 +120,22 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => setNavbarMenu(), 0);
   };
 
-  const scrollToTop = () => {
-    rootElement.scrollTo({
-      top: 0,
-      behavior: "smooth",
+  // Add class 'active' to section when near top of viewport
+  const setActiveSection = () => {
+    sections.forEach((section, index) => {
+      const inViewPort = isInViewport(section);
+      if (inViewPort) {
+        section.classList.add("section__active");
+        menuLinks[index].classList.add("menu__link_active");
+      } else {
+        section.classList.remove("section__active");
+        menuLinks[index].classList.remove("menu__link_active");
+      }
     });
   };
 
-  const handleScroll = () => {
-    const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
-    scrollToTopBtn.style.opacity = rootElement.scrollTop / scrollTotal;
-    if (rootElement.scrollTop / scrollTotal > 0.15) {
-      scrollToTopBtn.style.display = "block";
-    } else {
-      scrollToTopBtn.style.display = "none";
-    }
-    console.log(
-      rootElement.scrollHeight,
-      rootElement.clientHeight,
-      rootElement.scrollTop
-    );
-  };
   setPage();
-
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener("click", function (e) {
-      e.preventDefault();
-      document
-        .querySelector(this.getAttribute("href"))
-        .scrollIntoView({ block: "start", behavior: "smooth" });
-    });
-  });
+  // Begin Events
   scrollToTopBtn.addEventListener("click", scrollToTop);
   document.addEventListener("scroll", handleScroll);
 });
