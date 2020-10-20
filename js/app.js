@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
       behavior: "smooth",
     });
   };
-
+  // used this site https://www.javascripttutorial.net/dom/css/check-if-an-element-is-visible-in-the-viewport/ to write func
   function isInViewport(element) {
     const rect = element.getBoundingClientRect();
     return (
@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const handleScroll = () => {
     navbarMenu.style.display = "block";
+    // get a help from this article https://css-tricks.com/how-to-make-an-unobtrusive-scroll-to-top-button/  decide when should bottob appear
     const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
     scrollToTopBtn.style.opacity = rootElement.scrollTop / scrollTotal;
     if (rootElement.scrollTop / scrollTotal > 0.15) {
@@ -122,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Add class 'active' to section when near top of viewport
   const setActiveSection = () => {
+    // used this article https://developer.mozilla.org/en-US/docs/Web/CSS/Viewport_concepts to understand whatis viewport
     sections.forEach((section, index) => {
       const inViewPort = isInViewport(section);
       if (inViewPort) {
