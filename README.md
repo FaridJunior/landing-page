@@ -9,3 +9,5 @@ live [here](http://mfs-landingpage.surge.sh)
 - botton to scorall to top
 - active section in the viewport
 - smoth scorlling
+- auto hide navbar when stop scorlling
+
