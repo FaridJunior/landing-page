@@ -12,3 +12,5 @@ live [here](http://mfs-landingpage.surge.sh)
 - smoth scorlling
 - auto hide navbar when stop scorlling
 
+
+you can find many reference to articles for how things was done 
